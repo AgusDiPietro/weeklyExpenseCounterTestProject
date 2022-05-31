@@ -14,12 +14,22 @@ class Presupuesto{
     constructor(presupusto){
         this.presupusto = Number(presupusto);
         this.restante = Number(presupuesto);
+        this.gastos = [];
 
     }
 }
+//metodos que van a imprimir html para la visualizacion del usuario.
 class UI {
+    insertarPresupuesto(cantidad){
+        const {presupuesto, restante} = cantidad
+        document.querySelector("#total").textContent = presupuesto;
+        document.querySelector("#restante").textContent = restante;
+
+    }
 
 }
+// instanciar
+const ui = new UI
 
 //Funciones
 function preguntarPresupuesto(){
@@ -33,5 +43,7 @@ function preguntarPresupuesto(){
 
     //Una vez validado el presupuesto
     presupusto = new Presupuesto(presupuestoUsuario);
+
+    ui.insertarPresupuesto(presupuesto);
 
 }
