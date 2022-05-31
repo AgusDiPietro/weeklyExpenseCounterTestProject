@@ -7,6 +7,8 @@ let presupuesto;
 eventListeners();
 function eventListeners(){
     document.addEventListener('DOMContentLoaded',preguntarPresupuesto);
+
+    formulario.addEventListener('submit',agregarGasto);
 }
 
 //Clases
@@ -21,12 +23,37 @@ class Presupuesto{
 //metodos que van a imprimir html para la visualizacion del usuario.
 class UI {
     insertarPresupuesto(cantidad){
+        // Extrayendo los valores.
         const {presupuesto, restante} = cantidad
+
+        //Agregar al HTML
         document.querySelector("#total").textContent = presupuesto;
         document.querySelector("#restante").textContent = restante;
 
     }
 
+    imprimirAlerta(mensaje,tipo){
+        //crear el div
+        const divMensaje = document.createElement('div');
+        divMensaje.classList.add('text-center', 'alert');
+
+        if(tipo === 'error'){
+            divMensaje.classList.add('alert-danger');
+        }else {
+            divMensaje.classList.add('alert-succes');
+        }
+        //Mensaje de error
+        divMensaje.textContent = mensaje;
+        // Insertar en HTML
+        document.querySelector('.primario').insertBefore(divMensaje, formulario);
+        //Quitar mensaje del HTML despues de un tiempo
+        setTimeout(() => {
+           divMensaje.remove() 
+        }, 1500); 
+
+
+
+    }
 }
 // instanciar
 const ui = new UI
@@ -45,5 +72,22 @@ function preguntarPresupuesto(){
     presupusto = new Presupuesto(presupuestoUsuario);
 
     ui.insertarPresupuesto(presupuesto);
+
+}
+//Añade los gastos a la lista
+function agregarGasto(e){
+    e.preventDefault();
+
+    //Leer datos del formulario
+    const nombre = document.querySelector("gasto").value;
+    const cantidad = document.querySelector("cantidad").value;
+
+    if(nombre ==='' || cantidad ===''){
+       ui.imprimirAlerta('Ambos campos son obligatorios','error');
+       return;
+    }else if (cantidad <= 0 || isNaN(cantidad)){
+        ui.imprimirAlerta("Cantidad no valida", "error");
+        return;
+    }
 
 }
