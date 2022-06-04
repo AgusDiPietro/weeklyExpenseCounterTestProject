@@ -17,7 +17,10 @@ class Presupuesto{
         this.presupusto = Number(presupusto);
         this.restante = Number(presupuesto);
         this.gastos = [];
-
+    }
+    
+    nuevoGasto(gasto){
+        this.gastos = [...this.gastos, gasto];
     }
 }
 //metodos que van a imprimir html para la visualizacion del usuario.
@@ -80,7 +83,7 @@ function agregarGasto(e){
 
     //Leer datos del formulario
     const nombre = document.querySelector("gasto").value;
-    const cantidad = document.querySelector("cantidad").value;
+    const cantidad = Number(document.querySelector("cantidad").value);
 
     if(nombre ==='' || cantidad ===''){
        ui.imprimirAlerta('Ambos campos son obligatorios','error');
@@ -89,5 +92,13 @@ function agregarGasto(e){
         ui.imprimirAlerta("Cantidad no valida", "error");
         return;
     }
+
+   // Generamos un objeto por cada gasto
+   const gasto = { nombre, cantidad, id:Date.now() } ; // Unimos nombre y cantidad a gasto.
+
+   // añade nuevo gasto
+   presupuesto.nuevoGasto(gasto);
+   
+   ui.imprimirAlerta("Gasto agregado correctamente");
 
 }
