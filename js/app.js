@@ -57,6 +57,8 @@ class UI {
 
     agregarGastoListado(gastos) {
 
+        this.limpiarHTML(); //Elimina el html previo y repetido.
+
         // iterar sobre los gastos 
         gastos.forEach ( gasto => {
             
@@ -72,11 +74,19 @@ class UI {
 
             //Boton para eliminar el gasto
             const btnBorrar = document.createElement('button');
-            btnBorrar.classList.add('btn', 'btn-danger', 'borrar-gasto')
+            btnBorrar.classList.add('btn', 'btn-danger', 'borrar-gasto');
+            btnBorrar.innerHTML = 'Borrar &times';
 
+            nuevoGasto.appendChild(btnBorrar);
 
             //Agregamos el boton al html del gasto
+            gastoListado.appendChild(nuevoGasto);
         })
+    }
+    limpiarHTML(){
+        while(gastoListado.firstChild){
+            gastoListado.removeChild(gastoListado.firstChild);
+        }
     }
 }
 // instanciar
