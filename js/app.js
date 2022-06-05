@@ -21,6 +21,13 @@ class Presupuesto{
     
     nuevoGasto(gasto){
         this.gastos = [...this.gastos, gasto];
+        this.calcularRestante();    
+    }
+    
+    calcularRestante(){
+        const gastado = this.gastos.reduce((total, gasto ) => total + gasto.cantidad, 0 ) //va sumando el total de lo gastado.
+        this.restante = this.presupusto - gastado;
+
     }
 }
 //metodos que van a imprimir html para la visualizacion del usuario.
@@ -70,7 +77,7 @@ class UI {
             nuevoGasto.dataset.id = id // hace lo mismo que nuevoGasto.setAttribute('data-id',id);
 
             //Agregar HTML de cada gasto
-            nuevoGasto.innerHTML = `${nombre} <span class = "badge-primary badge-pill"> ${cantidad} </span>`;
+            nuevoGasto.innerHTML = `${nombre} <span class = "badge-primary badge-pill"> $ ${cantidad} </span>`;
 
             //Boton para eliminar el gasto
             const btnBorrar = document.createElement('button');
@@ -88,6 +95,32 @@ class UI {
             gastoListado.removeChild(gastoListado.firstChild);
         }
     }
+
+    actualizarRestante(restante){
+        document.querySelector("#restante").textContent = restante;
+    }
+    comprobarPresupuesto(presupuestoObj){
+        const {presupuesto, restante} = presupuestoObj;
+        
+        const restanteDiv = document.querySelector('.restante');
+
+        //Comprobar 25%
+        if((presupuesto/4) > restante){
+            restanteDiv.classList.remove('alert-success','alert-warning');
+            restanteDiv.classList.add('alert-danger');
+            //Comprobar 50%
+        }else if ((presupuesto/2) > restante){
+            restanteDiv.classList.remove('alert-success');
+            restanteDiv.classList.add('alert-warning');
+        }
+        // si el restante es 0 o menor.
+        if(restante <=0) {
+            ui.imprimirAlerta('El presupuesto se ha agotado', 'error');
+            formulario.querySelector('button[type="submit"]').disable = true;
+        }
+    }
+
+
 }
 // instanciar
 const ui = new UI
@@ -134,8 +167,12 @@ function agregarGasto(e){
    ui.imprimirAlerta("Gasto agregado correctamente");
 
    // Imprimir los gastos   
-   const {gastos} = presupuesto;    
+   const {gastos, restante} = presupuesto;    
    ui.agregarGastoListado(gastos);
+
+   ui.actualizarRestante(restante);
+
+   ui.comprobarPresupuesto(presupuesto); // comprobamos lo que gastamos junto al presupuesto.
 
    // Reiniciamos el formulario para volver a utilizarlo
    formulario.reset();
